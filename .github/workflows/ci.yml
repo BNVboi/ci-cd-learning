@@ -1,0 +1,25 @@
+name: Static Site CI Checks
+
+on:
+  push:
+    branches:
+      - main # Trigger on pushes to the main branch
+  pull_request:
+    branches:
+      - main # Trigger on pull requests to the main branch
+
+jobs:
+  ci_checks: # Job name changed to reflect CI purpose
+    runs-on: ubuntu-latest # Run the job on a virtual machine
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4 # Get the code from your repository
+
+    - name: Verify files are present (Optional basic check)
+      run: |
+        echo "Listing files in the repository:"
+        ls -la
+        # Add more specific checks here, e.g.:
+        # echo "Checking for index.html..."
+        # test -f index.html
