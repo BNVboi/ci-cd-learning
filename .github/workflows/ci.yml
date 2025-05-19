@@ -20,6 +20,5 @@ jobs:
       run: |
         echo "Listing files in the repository:"
         ls -la
-        # Add more specific checks here, e.g.:
-        # echo "Checking for index.html..."
-        # test -f index.html
+        echo "Checking for index.html..."
+        test -f index.html
