@@ -3,22 +3,41 @@ name: Static Site CI Checks
 on:
   push:
     branches:
-      - main # Trigger on pushes to the main branch
+      - main 
   pull_request:
     branches:
-      - main # Trigger on pull requests to the main branch
+      - main 
 
 jobs:
-  ci_checks: # Job name changed to reflect CI purpose
-    runs-on: ubuntu-latest # Run the job on a virtual machine
+  ci_checks:
+    runs-on: ubuntu-latest 
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4 # Get the code from your repository
+      uses: actions/checkout@v4 
 
-    - name: Verify files are present (Optional basic check)
+    - name: Validate Compulsory Form Fields
       run: |
-        echo "Listing files in the repository:"
-        ls -la
-        echo "Checking for index.html..."
-        test -f index.html
+        echo "Checking for compulsory form fields in index.html..."
+
+        # Check for First Name input with 'name="firstname"' and 'required' attribute
+        # The regex [^>]* matches any character except '>' zero or more times.
+        # This helps in finding attributes regardless of their order.
+        if ! grep -q '<input[^>]*name="firstname"[^>]*required' index.html; then
+          echo "Error: 'First Name' input with 'name=\"firstname\"' and 'required' attribute not found in index.html."
+          exit 1 # Fail the step if not found
+        fi
+
+        # Check for Email input with 'name="email"' and 'required' attribute, and type="email"
+        if ! grep -q '<input[^>]*type="email"[^>]*name="email"[^>]*required' index.html; then
+          echo "Error: 'Email' input with 'type=\"email\"', 'name=\"email\"' and 'required' attribute not found in index.html."
+          exit 1 # Fail the step if not found
+        fi
+
+        # Check for Phone Number input with 'name="phone"' and 'required' attribute
+        if ! grep -q '<input[^>]*name="phone"[^>]*required' index.html; then
+          echo "Error: 'Phone Number' input with 'name=\"phone\"' and 'required' attribute not found in index.html."
+          exit 1 # Fail the step if not found
+        fi
+
+        echo "All compulsory form fields found and marked as required."
